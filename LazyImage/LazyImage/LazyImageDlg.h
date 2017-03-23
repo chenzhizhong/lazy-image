@@ -11,6 +11,10 @@ class CLazyImageDlg : public CDialogEx
 // Construction
 public:
 	CLazyImageDlg(CWnd* pParent = NULL);	// standard constructor
+	virtual ~CLazyImageDlg();
+
+	// œµÕ≥Õ–≈Ã
+	NOTIFYICONDATA m_Notification;
 
 // Dialog Data
 	enum { IDD = IDD_LAZYIMAGE_DIALOG };

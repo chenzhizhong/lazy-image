@@ -45,13 +45,15 @@ END_MESSAGE_MAP()
 
 // CLazyImageDlg dialog
 
-
-
-
 CLazyImageDlg::CLazyImageDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLazyImageDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+}
+
+CLazyImageDlg::~CLazyImageDlg()
+{
+	Shell_NotifyIcon(NIM_DELETE, &m_Notification);
 }
 
 void CLazyImageDlg::DoDataExchange(CDataExchange* pDX)
@@ -98,6 +100,26 @@ BOOL CLazyImageDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+
+	// 显示系统托盘
+	m_Notification.cbSize = sizeof(NOTIFYICONDATA);
+	m_Notification.hWnd = m_hWnd;
+	m_Notification.uID = IDR_MAINFRAME;
+	m_Notification.uFlags = NIF_MESSAGE|NIF_ICON|NIF_TIP;
+	m_Notification.uCallbackMessage = WM_USER;
+	m_Notification.hIcon = m_hIcon;
+	LoadString(GetModuleHandle(NULL), IDS_LAZYIMAGE, m_Notification.szTip, sizeof(m_Notification.szTip) / sizeof(WCHAR)); 
+	::Shell_NotifyIcon(NIM_ADD, &m_Notification);
+
+	// 从任务栏中去掉
+	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);
+
+	// 隐藏窗口
+	WINDOWPLACEMENT wp;
+	wp.length=sizeof(WINDOWPLACEMENT);
+	wp.flags = WPF_RESTORETOMAXIMIZED;
+	wp.showCmd = SW_HIDE;
+	SetWindowPlacement(&wp);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }

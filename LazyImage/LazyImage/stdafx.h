@@ -38,9 +38,9 @@
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
 
-
-
-
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 
 
