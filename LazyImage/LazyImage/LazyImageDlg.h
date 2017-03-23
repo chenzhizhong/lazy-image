@@ -5,6 +5,9 @@
 #pragma once
 
 
+#define WM_NOTIFICATION_CALLBACK	(WM_USER + 1)
+
+
 // CLazyImageDlg dialog
 class CLazyImageDlg : public CDialogEx
 {
@@ -33,4 +36,7 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+	afx_msg LRESULT OnNotificationCallback(WPARAM wParam, LPARAM lParam);
+public:
+	afx_msg void OnMenuItemExit();
 };

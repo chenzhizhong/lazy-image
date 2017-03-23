@@ -65,6 +65,8 @@ BEGIN_MESSAGE_MAP(CLazyImageDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_MESSAGE(WM_NOTIFICATION_CALLBACK, &CLazyImageDlg::OnNotificationCallback)
+	ON_COMMAND(ID_MENU_ITEM_EXIT, &CLazyImageDlg::OnMenuItemExit)
 END_MESSAGE_MAP()
 
 
@@ -106,7 +108,7 @@ BOOL CLazyImageDlg::OnInitDialog()
 	m_Notification.hWnd = m_hWnd;
 	m_Notification.uID = IDR_MAINFRAME;
 	m_Notification.uFlags = NIF_MESSAGE|NIF_ICON|NIF_TIP;
-	m_Notification.uCallbackMessage = WM_USER;
+	m_Notification.uCallbackMessage = WM_NOTIFICATION_CALLBACK;
 	m_Notification.hIcon = m_hIcon;
 	LoadString(GetModuleHandle(NULL), IDS_LAZYIMAGE, m_Notification.szTip, sizeof(m_Notification.szTip) / sizeof(WCHAR)); 
 	::Shell_NotifyIcon(NIM_ADD, &m_Notification);
@@ -173,3 +175,32 @@ HCURSOR CLazyImageDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+afx_msg LRESULT CLazyImageDlg::OnNotificationCallback(WPARAM wParam, LPARAM lParam)
+{
+	if (wParam != IDR_MAINFRAME)
+	{
+		return 1;
+	}
+
+	if (lParam == WM_RBUTTONDOWN)
+	{
+		CMenu menu;
+		menu.LoadMenu(IDR_MENU_RCLICK_NOTIFICATION);
+
+		CMenu *pMenu = menu.GetSubMenu(0);
+        CPoint pt;
+        GetCursorPos(&pt);
+		SetForegroundWindow();
+        pMenu->TrackPopupMenu(TPM_RIGHTBUTTON, pt.x, pt.y, this);
+	}
+
+	return 0;
+}
+
+void CLazyImageDlg::OnMenuItemExit()
+{
+	// TODO: Add your command handler code here
+
+	// ¹Ø±Õ¶Ô»°¿ò
+	OnCancel();
+}
